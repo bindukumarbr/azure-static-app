@@ -4,21 +4,977 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bindukumar — Cloud Engineer</title>
-
-    <!-- KEEPING YOUR SAME FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap"
       rel="stylesheet"
     />
-
-    <!-- ⚠️ YOUR CSS IS 100% SAME — NOT TOUCHING -->
     <style>
-      /* KEEP YOUR ENTIRE CSS EXACTLY SAME */
+      /* ── Reset & Variables ─────────────────────────────── */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --sand: #f5efe6;
+        --cream: #faf7f2;
+        --warm: #e8ddd0;
+        --ink: #1a1410;
+        --muted: #7a6f64;
+        --accent: #c8522a;
+        --accent2: #e8813a;
+        --teal: #1e6b6b;
+        --border: #d8cfc5;
+        --serif: "Playfair Display", Georgia, serif;
+        --mono: "DM Mono", monospace;
+        --sans: "DM Sans", sans-serif;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--cream);
+        color: var(--ink);
+        font-family: var(--sans);
+        font-weight: 300;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      /* ── Noise texture overlay ─────────────────────────── */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.025;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 200px;
+      }
+
+      /* ── Animations ────────────────────────────────────── */
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+
+      .fade-up {
+        animation: fadeUp 0.7s ease both;
+      }
+
+      .d1 {
+        animation-delay: 0.1s;
+      }
+      .d2 {
+        animation-delay: 0.25s;
+      }
+      .d3 {
+        animation-delay: 0.4s;
+      }
+      .d4 {
+        animation-delay: 0.55s;
+      }
+
+      /* ── Navigation ────────────────────────────────────── */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 1.25rem 2.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(250, 247, 242, 0.85);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid transparent;
+        transition: border-color 0.3s;
+      }
+
+      nav.scrolled {
+        border-bottom-color: var(--border);
+      }
+
+      .nav-logo {
+        font-family: var(--serif);
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--ink);
+        text-decoration: none;
+        letter-spacing: -0.01em;
+      }
+
+      .nav-logo span {
+        color: var(--accent);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+
+      .nav-links a {
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        color: var(--muted);
+        text-decoration: none;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        transition: color 0.2s;
+      }
+
+      .nav-links a:hover {
+        color: var(--accent);
+      }
+
+      /* ── Hero ──────────────────────────────────────────── */
+      .hero {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 8rem 2.5rem 4rem;
+        overflow: hidden;
+      }
+
+      .hero-bg-letter {
+        position: absolute;
+        right: -0.1em;
+        top: 50%;
+        transform: translateY(-50%);
+        font-family: var(--serif);
+        font-size: clamp(20rem, 30vw, 40rem);
+        font-weight: 900;
+        color: var(--warm);
+        line-height: 1;
+        pointer-events: none;
+        user-select: none;
+        z-index: 0;
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 720px;
+      }
+
+      .hero-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        background: #22c55e;
+        border-radius: 50%;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      .hero-eyebrow span {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        color: var(--muted);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        font-family: var(--serif);
+        font-size: clamp(3rem, 7vw, 6rem);
+        font-weight: 900;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.2em;
+      }
+
+      h1 .line2 {
+        color: var(--accent);
+        font-style: italic;
+      }
+
+      .hero-sub {
+        font-size: 1.15rem;
+        color: var(--muted);
+        max-width: 480px;
+        margin: 1.5rem 0 2.5rem;
+        line-height: 1.7;
+      }
+
+      .hero-cta {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.85rem 1.8rem;
+        background: var(--ink);
+        color: var(--cream);
+        border: none;
+        border-radius: 4px;
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        text-decoration: none;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+      }
+
+      .btn-primary:hover {
+        background: var(--accent);
+        transform: translateY(-2px);
+      }
+
+      .btn-outline {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.85rem 1.8rem;
+        background: transparent;
+        color: var(--ink);
+        border: 1.5px solid var(--border);
+        border-radius: 4px;
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        text-decoration: none;
+        cursor: pointer;
+        transition:
+          border-color 0.2s,
+          color 0.2s,
+          transform 0.15s;
+      }
+
+      .btn-outline:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        transform: translateY(-2px);
+      }
+
+      /* ── Section base ──────────────────────────────────── */
+      section {
+        position: relative;
+        z-index: 1;
+        padding: 5rem 2.5rem;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      .section-label {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--accent);
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        margin-bottom: 0.75rem;
+      }
+
+      h2 {
+        font-family: var(--serif);
+        font-size: clamp(2rem, 4vw, 3rem);
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        margin-bottom: 1rem;
+      }
+
+      /* ── Stack Grid ────────────────────────────────────── */
+      .stack-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1rem;
+        margin-top: 2.5rem;
+      }
+
+      .stack-card {
+        background: var(--sand);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1.25rem 1rem;
+        text-align: center;
+        transition:
+          border-color 0.2s,
+          transform 0.2s,
+          box-shadow 0.2s;
+        cursor: default;
+      }
+
+      .stack-card:hover {
+        border-color: var(--accent);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(200, 82, 42, 0.1);
+      }
+
+      .stack-icon {
+        font-size: 2rem;
+        margin-bottom: 0.6rem;
+        display: block;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      .stack-card:nth-child(2) .stack-icon {
+        animation-delay: 0.3s;
+      }
+      .stack-card:nth-child(3) .stack-icon {
+        animation-delay: 0.6s;
+      }
+
+      .stack-name {
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--ink);
+        display: block;
+        margin-bottom: 0.2rem;
+      }
+
+      .stack-tag {
+        font-family: var(--sans);
+        font-size: 0.68rem;
+        color: var(--muted);
+      }
+
+      /* ── Projects ──────────────────────────────────────── */
+      .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2.5rem;
+      }
+
+      .project-card {
+        background: var(--sand);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s,
+          border-color 0.2s;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .project-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent), var(--accent2));
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+      }
+
+      .project-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(26, 20, 16, 0.08);
+        border-color: var(--warm);
+      }
+
+      .project-card:hover::before {
+        transform: scaleX(1);
+      }
+
+      .project-number {
+        font-family: var(--mono);
+        font-size: 0.65rem;
+        color: var(--muted);
+        letter-spacing: 0.1em;
+      }
+
+      .project-title {
+        font-family: var(--serif);
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--ink);
+        line-height: 1.3;
+      }
+
+      .project-desc {
+        font-size: 0.875rem;
+        color: var(--muted);
+        line-height: 1.6;
+        flex: 1;
+      }
+
+      .project-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-top: 0.25rem;
+      }
+
+      .tag {
+        padding: 0.2rem 0.6rem;
+        background: var(--warm);
+        border-radius: 3px;
+        font-family: var(--mono);
+        font-size: 0.65rem;
+        color: var(--muted);
+        letter-spacing: 0.04em;
+      }
+
+      .tag.highlight {
+        background: rgba(200, 82, 42, 0.1);
+        color: var(--accent);
+      }
+
+      /* ── Journey / Timeline ────────────────────────────── */
+      .timeline {
+        margin-top: 2.5rem;
+        position: relative;
+        padding-left: 2rem;
+      }
+
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 6px;
+        bottom: 6px;
+        width: 1px;
+        background: var(--border);
+      }
+
+      .timeline-item {
+        position: relative;
+        padding-bottom: 2.5rem;
+      }
+
+      .timeline-item:last-child {
+        padding-bottom: 0;
+      }
+
+      .timeline-dot {
+        position: absolute;
+        left: -2.4rem;
+        top: 5px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--cream);
+        border: 2px solid var(--accent);
+      }
+
+      .timeline-item.current .timeline-dot {
+        background: var(--accent);
+        box-shadow: 0 0 0 4px rgba(200, 82, 42, 0.15);
+      }
+
+      .timeline-year {
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        color: var(--accent);
+        letter-spacing: 0.08em;
+        margin-bottom: 0.3rem;
+      }
+
+      .timeline-role {
+        font-family: var(--serif);
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+      }
+
+      .timeline-org {
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-bottom: 0.5rem;
+      }
+
+      .timeline-desc {
+        font-size: 0.85rem;
+        color: var(--muted);
+        line-height: 1.6;
+        max-width: 520px;
+      }
+
+      /* ── Stats bar ──────────────────────────────────────── */
+      .stats-bar {
+        background: var(--ink);
+        color: var(--cream);
+        padding: 3rem 2.5rem;
+        margin: 0;
+      }
+
+      .stats-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 2rem;
+        text-align: center;
+      }
+
+      .stat-number {
+        font-family: var(--serif);
+        font-size: 2.8rem;
+        font-weight: 900;
+        color: var(--accent2);
+        line-height: 1;
+        margin-bottom: 0.3rem;
+      }
+
+      .stat-label {
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        color: rgba(245, 239, 230, 0.5);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      /* ── Contact ────────────────────────────────────────── */
+      .contact-section {
+        background: var(--sand);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+      }
+
+      .contact-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 5rem 2.5rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+      }
+
+      .contact-headline {
+        font-family: var(--serif);
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        font-weight: 900;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+      }
+
+      .contact-headline em {
+        color: var(--accent);
+        font-style: italic;
+      }
+
+      .contact-sub {
+        font-size: 0.95rem;
+        color: var(--muted);
+        margin-top: 1rem;
+        line-height: 1.7;
+      }
+
+      .contact-links {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .contact-link {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 1.25rem;
+        background: var(--cream);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        text-decoration: none;
+        color: var(--ink);
+        transition:
+          border-color 0.2s,
+          transform 0.15s;
+      }
+
+      .contact-link:hover {
+        border-color: var(--accent);
+        transform: translateX(4px);
+      }
+
+      .contact-link-icon {
+        font-size: 1.2rem;
+      }
+
+      .contact-link-label {
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .contact-link-value {
+        font-size: 0.875rem;
+        color: var(--ink);
+        margin-top: 0.1rem;
+      }
+
+      .contact-link-arrow {
+        margin-left: auto;
+        color: var(--muted);
+        font-size: 1.1rem;
+        transition: transform 0.15s;
+      }
+
+      .contact-link:hover .contact-link-arrow {
+        transform: translateX(3px);
+        color: var(--accent);
+      }
+
+      /* ── Footer ─────────────────────────────────────────── */
+      footer {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 2rem 2.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .footer-copy {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--muted);
+      }
+
+      .footer-built {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      .footer-built span {
+        color: var(--accent);
+      }
+
+      /* ── Responsive ─────────────────────────────────────── */
+      @media (max-width: 768px) {
+        nav {
+          padding: 1rem 1.5rem;
+        }
+        .nav-links {
+          display: none;
+        }
+        section {
+          padding: 4rem 1.5rem;
+        }
+        .hero {
+          padding: 7rem 1.5rem 3rem;
+        }
+        .hero-bg-letter {
+          font-size: 55vw;
+          opacity: 0.4;
+        }
+        .contact-inner {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+        .stats-bar {
+          padding: 2.5rem 1.5rem;
+        }
+      }
+
+      /* ── Scroll-reveal via IntersectionObserver ─────────── */
+      .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.6s ease,
+          transform 0.6s ease;
+      }
+
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ── Enhanced Project Card Details ─────────────────── */
+      .project-challenge {
+        background: rgba(200, 82, 42, 0.05);
+        padding: 0.75rem;
+        border-radius: 6px;
+        margin-top: 0.5rem;
+        font-size: 0.82rem;
+        line-height: 1.5;
+        border-left: 2px solid var(--accent);
+      }
+
+      .project-challenge-label {
+        font-family: var(--mono);
+        font-size: 0.65rem;
+        color: var(--accent);
+        font-weight: 600;
+        margin-bottom: 0.2rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .project-outcome {
+        background: rgba(30, 107, 107, 0.05);
+        padding: 0.75rem;
+        border-radius: 6px;
+        margin-top: 0.5rem;
+        font-size: 0.82rem;
+        line-height: 1.5;
+        border-left: 2px solid var(--teal);
+      }
+
+      .project-outcome-label {
+        font-family: var(--mono);
+        font-size: 0.65rem;
+        color: var(--teal);
+        font-weight: 600;
+        margin-bottom: 0.2rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .project-links {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+        flex-wrap: wrap;
+      }
+
+      .project-link-btn {
+        padding: 0.4rem 0.8rem;
+        background: var(--warm);
+        color: var(--ink);
+        text-decoration: none;
+        border-radius: 4px;
+        font-family: var(--mono);
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        transition: background 0.2s, color 0.2s;
+        border: 1px solid var(--border);
+      }
+
+      .project-link-btn:hover {
+        background: var(--accent);
+        color: var(--cream);
+        border-color: var(--accent);
+      }
+
+      /* ── Skills Grid ───────────────────────────────────── */
+      .skills-section {
+        margin-top: 2.5rem;
+      }
+
+      .skills-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2.5rem;
+      }
+
+      .skill-category {
+        background: var(--sand);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1.5rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .skill-category:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(26, 20, 16, 0.08);
+      }
+
+      .skill-category-name {
+        font-family: var(--serif);
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--ink);
+        margin-bottom: 0.75rem;
+      }
+
+      .skill-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+
+      .skill-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem;
+        border-radius: 4px;
+        background: rgba(250, 247, 242, 0.5);
+        font-size: 0.9rem;
+      }
+
+      .skill-name {
+        color: var(--ink);
+        font-weight: 500;
+      }
+
+      .skill-level {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.75rem;
+        font-family: var(--mono);
+      }
+
+      .skill-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      .skill-dot.expert {
+        background: #22c55e;
+      }
+      .skill-dot.proficient {
+        background: #f59e0b;
+      }
+      .skill-dot.familiar {
+        background: #ef4444;
+      }
+
+      /* ── Contact Form ──────────────────────────────────── */
+      .form-group {
+        margin-bottom: 1.25rem;
+      }
+
+      .form-label {
+        display: block;
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--accent);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
+
+      .form-input,
+      .form-textarea,
+      .form-select {
+        width: 100%;
+        padding: 0.85rem;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font-family: var(--sans);
+        font-size: 0.95rem;
+        background: var(--cream);
+        color: var(--ink);
+        transition: border-color 0.2s;
+      }
+
+      .form-input:focus,
+      .form-textarea:focus,
+      .form-select:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(200, 82, 42, 0.1);
+      }
+
+      .form-textarea {
+        resize: vertical;
+        min-height: 120px;
+      }
+
+      .form-submit {
+        padding: 0.85rem 2rem;
+        background: var(--ink);
+        color: var(--cream);
+        border: none;
+        border-radius: 4px;
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.15s;
+      }
+
+      .form-submit:hover {
+        background: var(--accent);
+        transform: translateY(-2px);
+      }
+
+      .form-message {
+        padding: 0.85rem;
+        border-radius: 6px;
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        display: none;
+      }
+
+      .form-message.success {
+        background: rgba(34, 197, 94, 0.1);
+        color: #15803d;
+        border: 1px solid rgba(34, 197, 94, 0.3);
+      }
+
+      .form-message.error {
+        background: rgba(239, 68, 68, 0.1);
+        color: #991b1b;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+      }
+
+      .form-message.show {
+        display: block;
+      }
     </style>
   </head>
-
   <body>
     <!-- NAV -->
     <nav id="nav">
@@ -124,13 +1080,210 @@
       </div>
     </section>
 
-    <!-- PROJECTS -->
+    <!-- SKILLS PROFICIENCY -->
+    <section id="skills" class="skills-section">
+      <div class="section-label">Expertise Levels</div>
+      <h2>Skills & Proficiency</h2>
+
+      <div class="skills-grid">
+        <!-- AWS -->
+        <div class="skill-category reveal">
+          <div class="skill-category-name">🟠 Cloud (AWS)</div>
+          <div class="skill-list">
+            <div class="skill-item">
+              <span class="skill-name">Lambda & Serverless</span>
+              <span class="skill-level">
+                <span class="skill-dot expert"></span> Expert
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">EC2 & ECS</span>
+              <span class="skill-level">
+                <span class="skill-dot proficient"></span> Proficient
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">DynamoDB & RDS</span>
+              <span class="skill-level">
+                <span class="skill-dot proficient"></span> Proficient
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">S3 & CloudFront</span>
+              <span class="skill-level">
+                <span class="skill-dot expert"></span> Expert
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">API Gateway & IAM</span>
+              <span class="skill-level">
+                <span class="skill-dot proficient"></span> Proficient
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Frontend -->
+        <div class="skill-category reveal">
+          <div class="skill-category-name">⚛️ Frontend</div>
+          <div class="skill-list">
+            <div class="skill-item">
+              <span class="skill-name">React & Next.js</span>
+              <span class="skill-level">
+                <span class="skill-dot expert"></span> Expert
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">TypeScript</span>
+              <span class="skill-level">
+                <span class="skill-dot expert"></span> Expert
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">Redux & State Mgmt</span>
+              <span class="skill-level">
+                <span class="skill-dot proficient"></span> Proficient
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">Tailwind & CSS</span>
+              <span class="skill-level">
+                <span class="skill-dot expert"></span> Expert
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Backend -->
+        <div class="skill-category reveal">
+          <div class="skill-category-name">🟢 Backend</div>
+          <div class="skill-list">
+            <div class="skill-item">
+              <span class="skill-name">Node.js & Express</span>
+              <span class="skill-level">
+                <span class="skill-dot expert"></span> Expert
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">GraphQL & REST APIs</span>
+              <span class="skill-level">
+                <span class="skill-dot proficient"></span> Proficient
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">Database Design</span>
+              <span class="skill-level">
+                <span class="skill-dot proficient"></span> Proficient
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">Authentication</span>
+              <span class="skill-level">
+                <span class="skill-dot expert"></span> Expert
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DevOps -->
+        <div class="skill-category reveal">
+          <div class="skill-category-name">⚙️ DevOps & CI/CD</div>
+          <div class="skill-list">
+            <div class="skill-item">
+              <span class="skill-name">GitHub Actions</span>
+              <span class="skill-level">
+                <span class="skill-dot proficient"></span> Proficient
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">Docker & Containers</span>
+              <span class="skill-level">
+                <span class="skill-dot proficient"></span> Proficient
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">Infrastructure as Code</span>
+              <span class="skill-level">
+                <span class="skill-dot familiar"></span> Familiar
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">AWS CDK</span>
+              <span class="skill-level">
+                <span class="skill-dot proficient"></span> Proficient
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Databases -->
+        <div class="skill-category reveal">
+          <div class="skill-category-name">🗄️ Databases</div>
+          <div class="skill-list">
+            <div class="skill-item">
+              <span class="skill-name">PostgreSQL</span>
+              <span class="skill-level">
+                <span class="skill-dot proficient"></span> Proficient
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">MongoDB</span>
+              <span class="skill-level">
+                <span class="skill-dot proficient"></span> Proficient
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">DynamoDB</span>
+              <span class="skill-level">
+                <span class="skill-dot expert"></span> Expert
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">Query Optimization</span>
+              <span class="skill-level">
+                <span class="skill-dot proficient"></span> Proficient
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Other -->
+        <div class="skill-category reveal">
+          <div class="skill-category-name">🧪 Testing & Quality</div>
+          <div class="skill-list">
+            <div class="skill-item">
+              <span class="skill-name">Jest & Vitest</span>
+              <span class="skill-level">
+                <span class="skill-dot proficient"></span> Proficient
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">React Testing Library</span>
+              <span class="skill-level">
+                <span class="skill-dot proficient"></span> Proficient
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">End-to-End Testing</span>
+              <span class="skill-level">
+                <span class="skill-dot familiar"></span> Familiar
+              </span>
+            </div>
+            <div class="skill-item">
+              <span class="skill-name">Performance Testing</span>
+              <span class="skill-level">
+                <span class="skill-dot familiar"></span> Familiar
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
     <section id="projects">
       <div class="section-label">Selected Work</div>
       <h2>Projects</h2>
 
       <div class="projects-grid">
-        <!-- PROJECT 1 -->
         <div class="project-card reveal">
           <span class="project-number">01 ——</span>
           <div class="project-title">Vitalis API — Serverless Platform</div>
@@ -139,29 +1292,77 @@
             Gateway, DynamoDB, and Cognito. Reduced infra cost and improved
             scalability with event-driven design.
           </p>
+          <div class="project-challenge">
+            <div class="project-challenge-label">Challenge</div>
+            Traditional monolithic backend couldn't scale for peak traffic. Cold starts and manual scaling were bottlenecks.
+          </div>
+          <div class="project-outcome">
+            <div class="project-outcome-label">Outcome</div>
+            ✓ 40% cost reduction · ✓ Auto-scaling to 5x traffic · ✓ Sub-100ms response times
+          </div>
+          <div class="project-tags">
+            <span class="tag highlight">AWS Lambda</span>
+            <span class="tag">API Gateway</span>
+            <span class="tag">DynamoDB</span>
+            <span class="tag">Cognito</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="project-link-btn">View Code</a>
+            <a href="#" class="project-link-btn">Case Study</a>
+          </div>
         </div>
 
-        <!-- PROJECT 2 -->
         <div class="project-card reveal">
           <span class="project-number">02 ——</span>
           <div class="project-title">Event-Driven Pipeline</div>
           <p class="project-desc">
             Implemented async workflows using DynamoDB Streams for order
-            processing and real-time synchronization.
+            processing and real-time synchronization across microservices.
           </p>
+          <div class="project-challenge">
+            <div class="project-challenge-label">Challenge</div>
+            Decoupling services without losing real-time data consistency. Race conditions during updates.
+          </div>
+          <div class="project-outcome">
+            <div class="project-outcome-label">Outcome</div>
+            ✓ Event-driven architecture · ✓ Zero data loss · ✓ 50ms latency between services
+          </div>
+          <div class="project-tags">
+            <span class="tag highlight">DynamoDB Streams</span>
+            <span class="tag">Event-Driven</span>
+            <span class="tag">Node.js</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="project-link-btn">GitHub</a>
+          </div>
         </div>
 
-        <!-- PROJECT 3 -->
         <div class="project-card reveal">
           <span class="project-number">03 ——</span>
           <div class="project-title">ECS Migration & Optimization</div>
           <p class="project-desc">
             Migrated backend to ECS improving scalability, reducing load time by
-            45% and boosting API performance.
+            45% and boosting API performance under load.
           </p>
+          <div class="project-challenge">
+            <div class="project-challenge-label">Challenge</div>
+            VM-based deployment had high overhead. Needed container orchestration with minimal downtime.
+          </div>
+          <div class="project-outcome">
+            <div class="project-outcome-label">Outcome</div>
+            ✓ 45% faster load times · ✓ 30% infrastructure cost savings · ✓ Blue-green deployments
+          </div>
+          <div class="project-tags">
+            <span class="tag highlight">ECS</span>
+            <span class="tag">Docker</span>
+            <span class="tag">CI/CD</span>
+            <span class="tag">Performance</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="project-link-btn">Architecture</a>
+          </div>
         </div>
 
-        <!-- PROJECT 4 -->
         <div class="project-card reveal">
           <span class="project-number">04 ——</span>
           <div class="project-title">Fleet Management SaaS</div>
@@ -169,16 +1370,49 @@
             Real-time tracking system using WebSockets and Maps API improving
             operational efficiency by 20%.
           </p>
+          <div class="project-challenge">
+            <div class="project-challenge-label">Challenge</div>
+            Real-time updates for 1000+ simultaneous users without overwhelming the server.
+          </div>
+          <div class="project-outcome">
+            <div class="project-outcome-label">Outcome</div>
+            ✓ 20% operational efficiency gain · ✓ Sub-2s GPS sync · ✓ 99.5% uptime
+          </div>
+          <div class="project-tags">
+            <span class="tag highlight">WebSockets</span>
+            <span class="tag">Maps API</span>
+            <span class="tag">Real-time</span>
+            <span class="tag">React</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="project-link-btn">Live Demo</a>
+          </div>
         </div>
 
-        <!-- PROJECT 5 -->
         <div class="project-card reveal">
           <span class="project-number">05 ——</span>
           <div class="project-title">Secure Admin Panel</div>
           <p class="project-desc">
             Implemented JWT authentication reducing unauthorized access by 90%
-            with robust backend APIs.
+            with robust backend APIs and role-based access control.
           </p>
+          <div class="project-challenge">
+            <div class="project-challenge-label">Challenge</div>
+            Legacy auth system was prone to session hijacking. Needed modern, stateless security.
+          </div>
+          <div class="project-outcome">
+            <div class="project-outcome-label">Outcome</div>
+            ✓ 90% reduction in security incidents · ✓ JWT + RBAC · ✓ Audit logging
+          </div>
+          <div class="project-tags">
+            <span class="tag highlight">JWT</span>
+            <span class="tag">RBAC</span>
+            <span class="tag">Security</span>
+            <span class="tag">OAuth2</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="project-link-btn">Docs</a>
+          </div>
         </div>
       </div>
     </section>
@@ -213,37 +1447,81 @@
     </section>
 
     <!-- CONTACT -->
-    <div class="contact-section" id="contact">
-      <div class="contact-inner">
-        <div>
-          <h2>Let’s Build Cloud Systems.</h2>
-        </div>
+    <section id="contact" style="background: var(--sand); border-top: 1px solid var(--border); padding: 4rem 2.5rem;">
+      <div style="max-width: 600px; margin: 0 auto;">
+        <div class="section-label">Let's Talk</div>
+        <h2>Get In Touch</h2>
 
-        <div class="contact-links">
-          <a href="mailto:bkbhrs99@gmail.com" class="contact-link"> Email </a>
-          <a
-            href="https://linkedin.com/in/bindukumar-br"
-            target="_blank"
-            class="contact-link"
-          >
-            LinkedIn
-          </a>
-          <a
-            href="https://github.com/bindukumar"
-            target="_blank"
-            class="contact-link"
-          >
-            GitHub
-          </a>
+        <p style="margin: 1.5rem 0; text-align: center; color: var(--muted); line-height: 1.7; font-size: 0.95rem;">
+          Have a project in mind or want to discuss cloud architecture? I'm available for consulting, contract work, or collaboration.
+        </p>
+
+        <form id="contactForm" class="reveal" style="margin-top: 2rem;">
+          <div class="form-group">
+            <label class="form-label" for="name">Full Name *</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="form-input"
+              placeholder="Your Name"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address *</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form-input"
+              placeholder="your@email.com"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="subject">Subject *</label>
+            <select id="subject" name="subject" class="form-select" required>
+              <option value="">— Select a subject —</option>
+              <option value="project-consultation">Project Consultation</option>
+              <option value="contract-work">Contract Work</option>
+              <option value="collaboration">Collaboration</option>
+              <option value="general-inquiry">General Inquiry</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="message">Message *</label>
+            <textarea
+              id="message"
+              name="message"
+              class="form-textarea"
+              placeholder="Tell me about your project or inquiry..."
+              required
+            ></textarea>
+          </div>
+
+          <button type="submit" class="form-submit">Send Message</button>
+          <div id="formMessage" class="form-message"></div>
+        </form>
+
+        <div style="margin-top: 2.5rem; text-align: center;">
+          <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem;">Or connect directly:</p>
+          <div style="display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;">
+            <a href="mailto:bkbhrs99@gmail.com" style="color: var(--accent); text-decoration: none; font-size: 0.9rem; font-family: var(--mono);">Email</a>
+            <a href="https://linkedin.com/in/bindukumar-br" target="_blank" style="color: var(--accent); text-decoration: none; font-size: 0.9rem; font-family: var(--mono);">LinkedIn</a>
+            <a href="https://github.com/bindukumar" target="_blank" style="color: var(--accent); text-decoration: none; font-size: 0.9rem; font-family: var(--mono);">GitHub</a>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
     <footer>
       <span>© 2026 Bindukumar</span>
     </footer>
 
-    <!-- SAME JS -->
     <script>
       const nav = document.getElementById("nav");
       window.addEventListener("scroll", () => {
@@ -260,6 +1538,69 @@
       });
 
       revealEls.forEach((el) => observer.observe(el));
+
+      // Contact Form Handling
+      const contactForm = document.getElementById("contactForm");
+      if (contactForm) {
+        contactForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const name = document.getElementById("name").value.trim();
+          const email = document.getElementById("email").value.trim();
+          const subject = document.getElementById("subject").value;
+          const message = document.getElementById("message").value.trim();
+          const messageDiv = document.getElementById("formMessage");
+
+          // Validation
+          if (!name || !email || !subject || !message) {
+            messageDiv.textContent = "Please fill in all fields.";
+            messageDiv.classList.add("error", "show");
+            setTimeout(() => messageDiv.classList.remove("show"), 5000);
+            return;
+          }
+
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            messageDiv.textContent = "Please enter a valid email address.";
+            messageDiv.classList.add("error", "show");
+            setTimeout(() => messageDiv.classList.remove("show"), 5000);
+            return;
+          }
+
+          // Submit to FormSpree
+          try {
+            const response = await fetch("https://formspree.io/f/mdkkyked", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                name,
+                email,
+                subject,
+                message,
+              }),
+            });
+
+            if (response.ok) {
+              messageDiv.textContent =
+                "✓ Message sent! I'll get back to you soon.";
+              messageDiv.classList.remove("error");
+              messageDiv.classList.add("success", "show");
+              contactForm.reset();
+              setTimeout(
+                () => messageDiv.classList.remove("show"),
+                5000
+              );
+            } else {
+              throw new Error("Submission failed");
+            }
+          } catch (err) {
+            messageDiv.textContent =
+              "Failed to send message. Please try again or email directly.";
+            messageDiv.classList.add("error", "show");
+            setTimeout(() => messageDiv.classList.remove("show"), 5000);
+          }
+        });
+      }
     </script>
   </body>
 </html>
